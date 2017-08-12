@@ -15,7 +15,6 @@ namespace C17_Ex01_2
 
         public static void CreateAndPrintSandClock()
         {
-            
             Console.WriteLine(@"* * * * *
   * * *
     *

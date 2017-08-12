@@ -20,7 +20,7 @@ namespace C17_Ex01_1
             string thirdNumber = string.Empty;
             string fourthNumber = string.Empty;
 
-            Console.WriteLine("Please Enter four positive four digits numbers: ");
+            Console.WriteLine("Please enter four positive four digits numbers: (after each number press enter)");
             firstNumber = NumberInput();
             secondNumber = NumberInput();
             thirdNumber = NumberInput();
@@ -53,34 +53,86 @@ namespace C17_Ex01_1
             Console.WriteLine("Statistics:");
             Console.WriteLine("Average = " + averageDecimalNumbers);
             Console.WriteLine("Average digits amount in binary numbers: " + averageDigitsAmount);
+
+            bool isIncSequnece = true;
+            bool isDecSequnece = true;
+
+            PrintIfIncOrDecSequence(i_FirstNumber, ref isIncSequnece, ref isDecSequnece);
+            PrintIfIncOrDecSequence(i_SecondNumber, ref isIncSequnece, ref isDecSequnece);
+            PrintIfIncOrDecSequence(i_ThirdNumber, ref isIncSequnece, ref isDecSequnece);
+            PrintIfIncOrDecSequence(i_FourthNumber, ref isIncSequnece, ref isDecSequnece);
         }
 
-        public static bool isRisingSeries(string i_NumberToCheck)
+        public static void PrintIfIncOrDecSequence(string i_NumberToCheck, ref bool i_Increasing, ref bool i_Decreasing)
+        {
+            i_Increasing = i_Decreasing = true;
+
+            if (isRapidlyIncOrDecSeries(i_NumberToCheck, ref i_Increasing, ref i_Decreasing))
+            {
+                if (i_Increasing)
+                {
+                    Console.WriteLine("The digits of the number {0} are a rapidly increasing sequence", i_NumberToCheck);
+                }
+                else if (i_Decreasing)
+                {
+                    Console.WriteLine("The digits of the number {0} are a rapidly decreasing sequence", i_NumberToCheck);
+                }
+            }
+        }
+
+        public static bool isRapidlyIncOrDecSeries(string i_NumberToCheck, ref bool i_Increasing, ref bool i_Decreasing)
         {
             int numberToCeck;
             int remainder;
             int nextRemainder;
-            bool o_IsrRising = true;
+            const bool o_IncOrDecSeq = true;
 
             int.TryParse(i_NumberToCheck, out numberToCeck);
 
+            // Check if the digits of the number is an increasing sequence
             while ((numberToCeck / 10) > 0)
             {
                 remainder = numberToCeck % 10;
                 nextRemainder = (numberToCeck / 10) % 10;
 
-                if (remainder > nextRemainder)
+                if (nextRemainder < remainder)
                 {
-                    continue;
+                    numberToCeck /= 10;
                 }
                 else
                 {
-                    o_IsrRising = false;
+                    i_Increasing = false;
                     break;
                 }
             }
 
-            return o_IsrRising;
+            int.TryParse(i_NumberToCheck, out numberToCeck);
+
+            if (numberToCeck.ToString().Length == 4)
+            {
+                // Check if the digits of the number is an decreasing sequence
+                while ((numberToCeck / 10) > 0)
+                {
+                    remainder = numberToCeck % 10;
+                    nextRemainder = (numberToCeck / 10) % 10;
+
+                    if (nextRemainder > remainder)
+                    {
+                        numberToCeck /= 10;
+                    }
+                    else
+                    {
+                        i_Decreasing = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                i_Decreasing = false;
+            }
+
+            return i_Increasing || i_Decreasing ? o_IncOrDecSeq : !o_IncOrDecSeq;
         }
 
         public static float CalcAverageDigitsAmount(string i_FirstNumber, string i_SecondNumber, string i_ThirdNumber, string i_FourthNumber)
